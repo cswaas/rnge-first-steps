@@ -1,15 +1,75 @@
-import React, {PureComponent} from 'react';
-import {View, Dimensions, StyleSheet, StatusBar} from 'react-native';
-import {GameEngine, GameLoop} from 'react-native-game-engine';
-import {Finger} from './components/renderers';
-import {MoveFinger} from './components/systems';
-import Header from './components/Header';
+import React, {Component} from 'react';
+import {View, Modal} from 'react-native';
+import CloseButton from './app/table-of-contents/closeButton';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-const {width: WIDTH, height: HEIGHT} = Dimensions.get('window');
-const RADIUS = 25;
+// import {GameEngine, GameLoop} from 'react-native-game-engine';
+// import {Finger} from './components/renderers';
+// import {MoveFinger} from './components/systems';
+// import Header from './components/Header';
 
-export default class App extends PureComponent {
-  /* Example with GameEngine
+import TableOfContents from './app/table-of-contents';
+import TouchChapter from './app/touch-events';
+
+// const {width: WIDTH, height: HEIGHT} = Dimensions.get('window');
+// const RADIUS = 25;
+
+EStyleSheet.build();
+
+export default class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      sceneVisible: false,
+      scene: null,
+    };
+  }
+
+  mountScene = scene => {
+    this.setState({
+      sceneVisible: true,
+      scene: scene,
+    });
+  };
+
+  unMountScene = () => {
+    this.setState({
+      sceneVisible: false,
+      scene: null,
+    });
+  };
+
+  render() {
+    return (
+      <View style={{flex: 1}}>
+        <TableOfContents
+          sceneVisible={this.state.sceneVisible}
+          contents={{
+            heading: 'Chapters',
+            items: [
+              TouchChapter(this.mountScene),
+              // PhysicsChapter(this.mountScene),
+              // SensorsChapter(this.mountScene),
+              // OpenGLChapter(this.mountScene),
+              // ExamplesChapter(this.mountScene)
+            ],
+          }}
+        />
+        <Modal
+          animationType={'slide'}
+          transparent={false}
+          visible={this.state.sceneVisible}
+          onRequestClose={_ => {}}>
+          {this.state.scene}
+
+          <CloseButton onPress={this.unMountScene} />
+        </Modal>
+      </View>
+    );
+  }
+}
+
+/* Example with GameEngine
   constructor() {
     super();
   }
@@ -35,7 +95,7 @@ export default class App extends PureComponent {
   } 
 */
 
-  /* Example with GameLoop */
+/* Example with GameLoop 
   constructor() {
     super();
     this.state = {
@@ -86,4 +146,6 @@ const styles = StyleSheet.create({
     height: RADIUS * 2,
     borderRadius: RADIUS * 2,
   },
-});
+}); 
+
+*/
