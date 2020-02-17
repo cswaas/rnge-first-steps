@@ -1,11 +1,15 @@
 import React, {PureComponent} from 'react';
-import {View, StyleSheet, StatusBar} from 'react-native';
-import {GameEngine} from 'react-native-game-engine';
+import {View, Dimensions, StyleSheet, StatusBar} from 'react-native';
+import {GameEngine, GameLoop} from 'react-native-game-engine';
 import {Finger} from './components/renderers';
 import {MoveFinger} from './components/systems';
 import Header from './components/Header';
 
+const {width: WIDTH, height: HEIGHT} = Dimensions.get('window');
+const RADIUS = 25;
+
 export default class App extends PureComponent {
+  /* Example with GameEngine
   constructor() {
     super();
   }
@@ -28,6 +32,40 @@ export default class App extends PureComponent {
         </GameEngine>
       </View>
     );
+  } 
+*/
+
+  /* Example with GameLoop */
+  constructor() {
+    super();
+    this.state = {
+      x: WIDTH / 2 - RADIUS,
+      y: HEIGHT / 2 - RADIUS,
+    };
+  }
+
+  updateHandler = ({touches, screen, layout, time}) => {
+    let move = touches.find(x => x.type === 'move');
+    if (move) {
+      this.setState({
+        x: this.state.x + move.delta.pageX,
+        y: this.state.y + move.delta.pageY,
+      });
+    }
+  };
+
+  render() {
+    return (
+      <View style={styles.container1}>
+        <Header title="My Game" />
+
+        <GameLoop style={styles.container2} onUpdate={this.updateHandler}>
+          <View
+            style={[styles.player, {left: this.state.x, top: this.state.y}]}
+          />
+        </GameLoop>
+      </View>
+    );
   }
 }
 
@@ -40,5 +78,12 @@ const styles = StyleSheet.create({
   container2: {
     flex: 1,
     backgroundColor: '#000',
+  },
+  player: {
+    position: 'absolute',
+    backgroundColor: 'pink',
+    width: RADIUS * 2,
+    height: RADIUS * 2,
+    borderRadius: RADIUS * 2,
   },
 });
