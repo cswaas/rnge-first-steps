@@ -1,8 +1,9 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, StatusBar} from 'react-native';
+import {View, StyleSheet, StatusBar} from 'react-native';
 import {GameEngine} from 'react-native-game-engine';
 import {Finger} from './components/renderers';
 import {MoveFinger} from './components/systems';
+import Header from './components/Header';
 
 export default class App extends PureComponent {
   constructor() {
@@ -11,25 +12,33 @@ export default class App extends PureComponent {
 
   render() {
     return (
-      <GameEngine
-        style={styles.container}
-        systems={[MoveFinger]}
-        entities={{
-          1: {position: [40, 200], renderer: <Finger />}, //-- Notice that each entity has a unique id (required)
-          2: {position: [100, 200], renderer: <Finger />}, //-- and a renderer property (optional). If no renderer
-          3: {position: [160, 200], renderer: <Finger />}, //-- is supplied with the entity - it won't get displayed.
-          4: {position: [220, 200], renderer: <Finger />},
-          5: {position: [280, 200], renderer: <Finger />},
-        }}>
-        <StatusBar hidden={true} />
-      </GameEngine>
+      <View style={styles.container1}>
+        <Header title="My Game" />
+        <GameEngine
+          style={styles.container2}
+          systems={[MoveFinger]}
+          entities={{
+            1: {position: [40, 200], renderer: <Finger />}, //-- Notice that each entity has a unique id (required)
+            2: {position: [100, 300], renderer: <Finger />}, //-- and a renderer property (optional). If no renderer
+            3: {position: [160, 400], renderer: <Finger />}, //-- is supplied with the entity - it won't get displayed.
+            4: {position: [220, 500], renderer: <Finger />},
+            5: {position: [280, 600], renderer: <Finger />},
+          }}>
+          <StatusBar hidden={true} />
+        </GameEngine>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
+  container1: {
     flex: 1,
-    backgroundColor: '#FFF',
+    backgroundColor: 'darkslateblue',
+    paddingTop: 30,
+  },
+  container2: {
+    flex: 1,
+    backgroundColor: '#000',
   },
 });
